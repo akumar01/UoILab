@@ -22,5 +22,4 @@ linear model class
 - Need to finish writing ESF score functions 
 - Make sure to check for 0 vs. 1 indexing problems
 - Be careful about element-wise operations
-- Immediate to-do: look at UoI_Lasso get_reg_params --> need to implement
-preprocess_data and check_Xy
+- Immediate to-do: look at U
