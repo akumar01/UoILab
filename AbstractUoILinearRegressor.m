@@ -4,6 +4,7 @@ classdef AbstractUoILinearRegressor < AbstractUoILinearModel
         fit_intercept
         normalize
         max_iter
+        intercept_
     end
     
     methods
@@ -68,6 +69,16 @@ classdef AbstractUoILinearRegressor < AbstractUoILinearModel
             self = fit@AbstractUoILinearModel(X, y, varargin);
             self.set_intercept(X_offset, y_offset, X_scale);
             self.coef_ = squeeze(self.coef_);
+        end
+        
+        function self = set_intercept(self, X_offset, y_offset, X_scale)
+        % Set the intercept
+            if self.fit_intercept
+                self.coef_ = self.coef_ / X_scale;
+                self.intercept_ = y_offset - dot(X_offset, self.coef_');            
+            else
+                self.intercept_ = 0;
+            end
         end
         
     end

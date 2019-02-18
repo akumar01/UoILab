@@ -17,10 +17,7 @@ function selection_thresholds =...
     % Ensure that the selection thresholds are within the permissible 
     % range
     
-    selection_thresholds = int16(selection_thresholds);
-    if find(selection_thresholds > n_boots) ||...
-            find(selection_thresholds < 1)
-       error('Stability selection thresholds not within correct bounds') 
-    end
+    if range(creation_of_reati
+    
     
 end

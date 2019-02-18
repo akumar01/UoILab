@@ -24,3 +24,6 @@ linear model class
 - Be careful about element-wise operations
 - Immediate to-do: look at UoI_Lasso get_reg_params --> need to implement
 preprocess_data and check_Xy
+
+02/17/2019
+- Finish intersection and then start testing

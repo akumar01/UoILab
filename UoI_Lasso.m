@@ -54,7 +54,6 @@ classdef UoI_Lasso < AbstractUoILinearRegressor
             n_samples = length(y);
 
             % Need to implement check_array and preprocess_data
-            X = check_array(X, 'csc', 'copy', copy_X && fit_intercept && ~X_sparse);
             [X, y, ~, ~, ~] = preprocess_data(X, y, fit_intercept,normalize,'copy', false);
             Xy = X' * y;
 

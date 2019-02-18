@@ -9,6 +9,7 @@ classdef AbstractUoILinearModel
         selection_thresholds
         n_supports
         estimation_score
+        coef_
     end
     
     methods
