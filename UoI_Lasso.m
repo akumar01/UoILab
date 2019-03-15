@@ -7,14 +7,14 @@ classdef UoI_Lasso < AbstractUoILinearRegressor
    
     methods
         function self = UoI_Lasso(varargin)
-            self = self@AbstractUoILinearRegressor(varargin);
-            
+            self = self@AbstractUoILinearRegressor;
+
             p = inputParser;
             addOptional(p, 'n_lambdas', 48)
             addOptional(p, 'eps', 0.001)
             addOptional(p, 'warm_start', true)
             parse(p, varargin{:})
-            
+               
             % Copy input arguments to object
             for fn = fieldnames(p.Results)'
                 self.(fn{1}) = p.Results.(fn{1});
@@ -48,7 +48,7 @@ classdef UoI_Lasso < AbstractUoILinearRegressor
             parse(p, varargin{:})
             
             if l1_ratio == 0
-                error({'Automatic alpha grid generation is not supported for l1_ratio=0. Please supply a grid by providing your estimator with the appropriate `alphas=` argument.'})
+                error('Automatic alpha grid generation is not supported for l1_ratio=0. Please supply a grid by providing your estimator with the appropriate `alphas=` argument.')
             end
 
             n_samples = length(y);
@@ -74,11 +74,11 @@ classdef UoI_Lasso < AbstractUoILinearRegressor
             
             alpha_max = max(sqrt(sum(Xy.^2, 2)))/(n_samples * l1_ratio);
 
-            if alpha_max <= eps
-                alphas = eps * ones(n_alphas, 1);
+            if alpha_max <= self.eps
+                alphas = self.eps * ones(n_alphas, 1);
             else
                 % Need to check this has the right shape
-                alphas = logspace(log10(alpha_max * eps), log10(alpha_max),...
+                alphas = logspace(log10(alpha_max * self.eps), log10(alpha_max),...
                                n_alphas);
             end
         end

@@ -25,17 +25,17 @@ function [X, y] = check_X_y(X, y)
        error('X must be numeric')
     end
 
-    if ~isnumeric(y)
+    if isnumeric(y)
         error('y must be numeric')
     end
     
     % Force all values to be finite:   
-    if sum(isnan(X(:))) > 0 || sum(isinf(X(:))) > 0
+    if sum(isnan(X)) > 0 || sum(isinf(X)) > 0
         error('X contains inf or nans')
     end
 
     % Force all values to be finite:   
-    if sum(isnan(y(:))) > 0 || sum(isinf(y(:))) > 0
+    if sum(isnan(y)) > 0 || sum(isinf(y)) > 0
         error('y contains inf or nans')
     end
     

@@ -27,3 +27,7 @@ preprocess_data and check_Xy
 
 02/17/2019
 - Finish intersection and then start testing
+
+03/14/2019
+- Started debugging - current error in using vecnorm command (was only 
+added in 2017)

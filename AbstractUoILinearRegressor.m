@@ -11,6 +11,11 @@ classdef AbstractUoILinearRegressor < AbstractUoILinearModel
         
         % Constructor
         function self = AbstractUoILinearRegressor(varargin)
+            % Stupid workaround to deal with consecutive passes 
+            % of varargin
+            if nargin == 1 && isempty(varargin{1})
+                varargin = {};
+            end
             self = self@AbstractUoILinearModel(varargin);
 
             p = inputParser;
@@ -25,7 +30,6 @@ classdef AbstractUoILinearRegressor < AbstractUoILinearModel
             for fn = fieldnames(p.Results)'
                 self.(fn{1}) = p.Results.(fn{1});
             end
-    
             
         end
 
@@ -65,7 +69,7 @@ classdef AbstractUoILinearRegressor < AbstractUoILinearModel
         function self = fit(self, X, y, varargin)
             [X, y] = check_X_y(X, y);
             [X, y, X_offset, y_offset, X_scale] = ...
-                self.preproces_data(X, y);
+                preprocess_data(X, y, self.fit_intercept, self.normalize);
             self = fit@AbstractUoILinearModel(X, y, varargin);
             self.set_intercept(X_offset, y_offset, X_scale);
             self.coef_ = squeeze(self.coef_);

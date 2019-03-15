@@ -15,6 +15,12 @@ classdef AbstractUoILinearModel
     methods
         % Constructor
         function self = AbstractUoILinearModel(varargin)
+            % Stupid workaround to deal with consecutive passes 
+            % of varargin
+            if nargin == 1 && isempty(varargin{1})
+                varargin = {};
+            end
+
             p = inputParser;
             addOptional(p, 'selection_frac', 0.9)
             addOptional(p, 'n_boots_sel', 48)
@@ -56,11 +62,7 @@ classdef AbstractUoILinearModel
         function self = intersect(self, coef, thresholds)
 
         end
-        
-        function self = preprocess_data(self, X, y)
-        
-        end
-        
+      
         function selection_lm(self, varargin)
 
         end

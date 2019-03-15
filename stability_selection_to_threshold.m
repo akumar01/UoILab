@@ -18,8 +18,9 @@ function selection_thresholds =...
     % range
     
     selection_thresholds = int16(selection_thresholds);
-    if find(selection_thresholds > n_boots) ||...
-            find(selection_thresholds < 1)
+    
+    if (any(selection_thresholds > n_boots) ||...
+            any(selection_thresholds < 1))
        error('Stability selection thresholds not within correct bounds') 
     end
     
