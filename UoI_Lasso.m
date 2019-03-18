@@ -1,7 +1,7 @@
 classdef UoI_Lasso < AbstractUoILinearRegressor
     properties
         n_lambdas
-        eps
+        tol
         warm_start
     end
    
@@ -11,7 +11,7 @@ classdef UoI_Lasso < AbstractUoILinearRegressor
 
             p = inputParser;
             addOptional(p, 'n_lambdas', 48)
-            addOptional(p, 'eps', 0.001)
+            addOptional(p, 'tol', 0.001)
             addOptional(p, 'warm_start', true)
             parse(p, varargin{:})
                
@@ -24,8 +24,7 @@ classdef UoI_Lasso < AbstractUoILinearRegressor
         % Handle call to matlab Lasso function
         function coefs = selection_lm(self, X, y, reg_params)
        
-            coefs = lasso(X, y, 'alpha', 1, 'lambda', reg_params.lambda,...
-                  'AbsTol', self.tol, 'MaxIter', self.max_iter);
+            coefs = lasso(X, y, 'Alpha', 1, 'lambda', reg_params);
   
         end
         
@@ -36,8 +35,13 @@ classdef UoI_Lasso < AbstractUoILinearRegressor
             
         end
 
+        % Pass on fitting responsibilities to superclass
+        function fit(self, X, y, varargin)
+            fit@AbstractUoILinearRegressor(self, X, y, varargin)
+        end
+            
         % Reproduce behavior of sklearn's alpha grid
-        function alphas = get_reg_parmas(X, y, varargin)
+        function lambdas = get_reg_params(self, X, y, varargin)
         
             p = inputParser;
             addOptional(p, 'l1_ratio', 0.5)
@@ -47,14 +51,10 @@ classdef UoI_Lasso < AbstractUoILinearRegressor
             addOptional(p, 'random_state', NaN)
             parse(p, varargin{:})
             
-            if l1_ratio == 0
-                error('Automatic alpha grid generation is not supported for l1_ratio=0. Please supply a grid by providing your estimator with the appropriate `alphas=` argument.')
-            end
-
             n_samples = length(y);
 
-            % Need to implement check_array and preprocess_data
-            [X, y, ~, ~, ~] = preprocess_data(X, y, fit_intercept,normalize,'copy', false);
+            [X, y, X_offset, ~, X_scale] = preprocess_data(X, y, self.fit_intercept, ...
+                            self.normalize);
             Xy = X' * y;
 
             mean_dot = X_offset * sum(y);
@@ -64,22 +64,22 @@ classdef UoI_Lasso < AbstractUoILinearRegressor
             %         Xy = Xy[:, np.newaxis]
             %     end
 
-            if fit_intercept
+            if self.fit_intercept
                 Xy = Xy - mean_dot;
             end
             
-            if normalize
+            if self.normalize
                 Xy = Xy./X_scale;
             end
             
-            alpha_max = max(sqrt(sum(Xy.^2, 2)))/(n_samples * l1_ratio);
+            lambda_max = max(sqrt(sum(Xy.^2, 2)))/(n_samples);
 
-            if alpha_max <= self.eps
-                alphas = self.eps * ones(n_alphas, 1);
+            if lambda_max <= eps
+                lambdas = self.eps * ones(self.n_lambdas, 1);
             else
                 % Need to check this has the right shape
-                alphas = logspace(log10(alpha_max * self.eps), log10(alpha_max),...
-                               n_alphas);
+                lambdas = logspace(log10(lambda_max * eps), log10(lambda_max),...
+                               self.n_lambdas);
             end
         end
     end

@@ -23,7 +23,7 @@ function [X, y, X_offset, y_offset, X_scale] =  preprocess_data(X, y, fit_interc
         X_offset = mean(X, 1);
         X = X - X_offset;
         if normalize
-            X_scale = vecnorm(X, 2, 1);
+            X_scale = sqrt(sum(X.^2, 1));
             X = bsxfun(@rdivide, X, X_scale);
         else
             X_scale = ones(size(X, 2));

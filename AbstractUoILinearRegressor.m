@@ -33,8 +33,8 @@ classdef AbstractUoILinearRegressor < AbstractUoILinearModel
             
         end
 
-        function n_coef = get_n_coef(self, X, y)
-            n_coef = size(X);
+        function [n_samples, n_coef] = get_n_coef(self, X, y)
+            [n_samples, n_coef] = size(X);
         end
         
         function score = score_predictions(self, metric, y_true, y_pred,...
@@ -61,16 +61,14 @@ classdef AbstractUoILinearRegressor < AbstractUoILinearModel
         function intsct = intersect(self, coef, thresholds)
             intsct = intersection(coef, thresholds);
         end
-        
-        function self = preprocess_data(self, X, y)
-            
-        end
-            
+                   
         function self = fit(self, X, y, varargin)
+            % Flatten varargin
+            varargin = varargin{1};
             [X, y] = check_X_y(X, y);
             [X, y, X_offset, y_offset, X_scale] = ...
                 preprocess_data(X, y, self.fit_intercept, self.normalize);
-            self = fit@AbstractUoILinearModel(X, y, varargin);
+            self = fit@AbstractUoILinearModel(self, X, y, varargin);
             self.set_intercept(X_offset, y_offset, X_scale);
             self.coef_ = squeeze(self.coef_);
         end

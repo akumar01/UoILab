@@ -12,8 +12,7 @@ classdef AbstractUoILinearModel
         coef_
         reg_params_
         n_reg_params_
-        supports_
-        n_supports_
+        suppo
     end
     
     methods

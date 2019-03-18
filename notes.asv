@@ -34,6 +34,4 @@ added in 2017)
 
 03/17/2019
 - Currently cannot include initialization arguments in arbitrary order
-- Need to make our own train_test_split (currently using dividerand) to 
-permit use of stratify flag
-- Matlab lasso does not support abstol or maxiter keywords
+- Need 
