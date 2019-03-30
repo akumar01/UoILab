@@ -10,9 +10,9 @@ classdef UoI_Lasso < AbstractUoILinearRegressor
             self = self@AbstractUoILinearRegressor;
 
             p = inputParser;
-            addOptional(p, 'n_lambdas', 48)
-            addOptional(p, 'tol', 0.001)
-            addOptional(p, 'warm_start', true)
+            addParameter(p, 'n_lambdas', 48)
+            addParameter(p, 'tol', 0.001)
+            addParameter(p, 'warm_start', true)
             parse(p, varargin{:})
                
             % Copy input arguments to object
@@ -29,7 +29,7 @@ classdef UoI_Lasso < AbstractUoILinearRegressor
         end
         
        % Handle call to matlab OLS
-        function coefs = estimation_lm(X, y)
+        function coefs = estimation_lm(self, X, y)
             
             coefs = mvregress(X, y);
             
@@ -44,11 +44,11 @@ classdef UoI_Lasso < AbstractUoILinearRegressor
         function lambdas = get_reg_params(self, X, y, varargin)
         
             p = inputParser;
-            addOptional(p, 'l1_ratio', 0.5)
-            addOptional(p, 'n_boots_sel', 48)
-            addOptional(p, 'n_boots_est', 48)
-            addOptional(p, 'stability_selection', 1)
-            addOptional(p, 'random_state', NaN)
+            addParameter(p, 'l1_ratio', 0.5)
+            addParameter(p, 'n_boots_sel', 48)
+            addParameter(p, 'n_boots_est', 48)
+            addParameter(p, 'stability_selection', 1)
+            addParameter(p, 'random_state', NaN)
             parse(p, varargin{:})
             
             n_samples = length(y);

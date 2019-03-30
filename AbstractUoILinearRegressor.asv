@@ -76,20 +76,15 @@ classdef AbstractUoILinearRegressor < AbstractUoILinearModel
         function self = set_intercept(self, X_offset, y_offset, X_scale)
         % Set the intercept
             if self.fit_intercept
-                self.coef_ = self.coef_ ./ X_scale;
+                self.coef_ = self.coef_ / X_scale;
                 self.intercept_ = y_offset - dot(X_offset, self.coef_');            
             else
                 self.intercept_ = 0;
             end
         end
         
-        function y_pred = predict(self, X, coef)
-           if nargin < 3
-               coef = self.coef_;
-           end
-           
-           y_pred = X * coef;
-           
+        function self = predict(self, X, coefs)
+           i  
         end
         
     end

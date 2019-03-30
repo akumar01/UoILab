@@ -37,3 +37,9 @@ added in 2017)
 - Need to make our own train_test_split (currently using dividerand) to 
 permit use of stratify flag
 - Matlab lasso does not support abstol or maxiter keywords
+
+03/29/2019
+- changed addOptional to addParameter to allow arbitrary order of arguments
+- dividerand supports number of targets - probably sufficient for stratification
+03/30/2019
+- Continue transferring tests to matlab
