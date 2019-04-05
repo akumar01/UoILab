@@ -45,9 +45,9 @@ classdef AbstractUoILinearRegressor < AbstractUoILinearModel
             else
                 n_features = nnz(supports);
                 if strcmp(metric, 'BIC')
-                    score = scorefn.BIC(y_true, y_pred, n_features);
+                    score = ESF.BIC(y_true, y_pred, n_features);
                 elseif strcmp(metric, 'AIC')
-                    score = scorefn.AIC(y_true, y_pred, n_features);
+                    score = ESF.AIC(y_true, y_pred, n_features);
                 elseif strcmp(metric, 'AICc')
                     score = ESF.AICc(y_true, y_pred, n_features);
                 else
@@ -69,7 +69,7 @@ classdef AbstractUoILinearRegressor < AbstractUoILinearModel
             [X, y, X_offset, y_offset, X_scale] = ...
                 preprocess_data(X, y, self.fit_intercept, self.normalize);
             self = fit@AbstractUoILinearModel(self, X, y, varargin);
-            self.set_intercept(X_offset, y_offset, X_scale);
+            self = self.set_intercept(X_offset, y_offset, X_scale);
             self.coef_ = squeeze(self.coef_);
         end
         

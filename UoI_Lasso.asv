@@ -30,13 +30,14 @@ classdef UoI_Lasso < AbstractUoILinearRegressor
         
        % Handle call to matlab OLS
         function coefs = estimation_lm(self, X, y)
-            lm = fitlm(X, y, 'Intercept', false);
-            coefs = lm.Coefficients.Estimate;
+            
+            coefs = regress(y, X);
+            % T
         end
 
         % Pass on fitting responsibilities to superclass
-        function self = fit(self, X, y, varargin)
-            self = fit@AbstractUoILinearRegressor(self, X, y, varargin);
+        function fit(self, X, y, varargin)
+            fit@AbstractUoILinearRegressor(self, X, y, varargin)
         end
             
         % Reproduce behavior of sklearn's alpha grid

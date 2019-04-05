@@ -1,0 +1,92 @@
+function run_tests_lasso
+
+test_variable_selection()
+
+end
+
+function test_variable_selection
+
+[X, y, w] = gen_data();
+lasso = UoI_Lasso();
+lasso = lasso.fit(X, y);
+
+true_coef = nonzeros(w);
+fit_coef = nonzeros(lasso.coef_);
+assert_approx_equal(true_coef, fit_coef);
+
+end
+
+function test_estimation_score_usage
+
+methods = ['r2', 'AIC', 'AICc', 'BIC'];
+
+% Change to use random state to generate data
+[X, y, ~] = gen_data('n_features', 10, 'n_informative', 3);
+
+scores = [];
+for i = 1:length(methods)
+    lasso = UoI_Lasso('est_score', methods(i));
+    assert(strcmp(lasso.est_score, methods(i)))
+    lasso = lasso.fit(X, y);
+    score = np.max(lasso.scores_);
+    scores.append(score)
+end    
+
+assert(length(unique(scores)), len(methods))
+
+end
+
+function test_random_state
+
+[X, y, ~] = make_regression('n_features', 5, 'n_informative', 3,...
+                            'random_state', 16, 'noise', 0.5);
+
+% Same state
+l1log_0 = UoI_Lasso('random_state', 13);
+l1log_1 = UoI_Lasso('random_state', 13);
+l1log_0 = l1log_0.fit(X, y);
+l1log_1 = l1log_1.fit(X, y);
+
+assert_approx_equal(l1log_0.coef_, l1log_1.coef_)
+
+% Different state
+l1log_1 = UoI_Lasso('random_state', 14);
+l1log_1 = l1log_1.fit(X, y);
+assert(~assert_approx_equal(l1log_0.coef_, l1log_1.coef_))
+
+% Different state, not set
+l1log_0 = UoI_Lasso();
+l1log_1 = UoI_Lasso();
+l1log_0 = l1log_0.fit(X, y);
+l1log_1 = l1log_1.fit(X, y);
+
+assert(~assert_approx_equal(l1log_0.coef_, l1log_1.coef_))
+
+
+end
+
+function test_uoi_lasso_toy
+
+% Test UoI Lasso on a toy example %
+X = [-1, 2; 4, 1; 1, 3; 4, 3; 8, 11];
+beta = [1, 4];
+y = X * beta;
+
+% Choose the selection frac to be slightly smaller to ensure
+% that we get good test sets
+
+lasso = UoI_Lasso('fit_inter
+
+
+end
+
+
+function assert_approx_equal(x1, x2, tol)
+
+if nargin < 3
+    tol = 1e-7;
+end
+
+assert(all(abs(x1 - x2) <= tol))
+
+end

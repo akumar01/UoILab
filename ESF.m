@@ -1,42 +1,41 @@
+% Change name of this class
 classdef ESF
     methods(Static)
+        function ll = log_likelihood_glm(model, y_true, y_pred)
+            if strcmp(model, 'normal')
+                rss = (y_true - y_pred).^2;
+                n_samples = numel(y_true);
+                ll = -n_samples/(2 * (1 + log(mean(rss))));
+            elseif strcmp(model, 'poisson')
+                ll = mean(y_true * log(y_pred) - y_pred);
+            else
+                error('Model is not available')
+            end
+        end
+            
         function s = r2score(y_true, y_pred)
             SSres = sum((y_true - y_pred).^2);
             SStot = sum((y_true - mean(y_true)).^2);
             s = 1 - SSres/SStot;
         end
        
-        function s = BIC(y_true, y_pred, n_features)
-            n_samples = numel(y_true);
+        function s = BIC(ll, n_features, n_samples)
             
-            RSS = sum((y_true - y_pred).^2);
-            
-            s = n_samples * log(RSS/n_samples) + ...
-                n_features * log(n_samples);
+            n_features * log(n_samples) - 2 * ll;
+        
         end
 
        
-        function s = AIC(y_true, y_pred, n_features)
-            n_samples = numel(y_true);
-            
-            RSS = sum((y_true - y_pred).^2);
-            s = n_samples * log(RSS/n_samples) +...
-                n_features * 2;
+        function s = AIC(ll, n_features)
+            s = 2 * n_features - 2 * ll;
         end
 
-        function s = AICc(y_true, y_pred, n_features)
-            n_samples = numel(y_true);
-            
-            RSS = sum((y_true - y_pred).^2);
-            
-            if n_samples - n_features - 1 == 0
-               s = AIC(y_true, y_pred, n_features); 
-            else
-               s = n_samples * log(RSS/n_samples) + ...
-                   n_features * 2 + 2 * ...
-                   (n_features^2 + n_features)/(n_samples - n_features - 1);
+        function s = AICc(ll, n_features, n_samples)
+            s = AIC(ll, n_features);
+            if n_samples > (n_features + 1)
+               s = s + 2 * (n_features^2 + n_features)/...
+                   (n_samples - n_features - 1);
             end
-            
         end
         
    end

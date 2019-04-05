@@ -145,15 +145,15 @@ classdef AbstractUoILinearModel
                    support = self.supports_(idx, :);
                    % Extract current support set
                    % If nothing was selected, do not bother running OLS
-                   if isempty(support)
-                      y_pred = zeros(numel(y_test));
+                   if isempty(nonzeros(support))
+                      y_pred = zeros(numel(y_test), 1);
                    else
                        % Compute ols estimate and store the fitted
                        % coefficients
                        n_boot_samples = size(X_train, 1);
                        support_mask = logical(repmat(support, n_boot_samples, 1));
                        coefs = self.estimation_lm(reshape(X_train(support_mask) ,...
-                           n_boot_samples, []), y_train);
+                               n_boot_samples, []), y_train);
                        estimate = zeros(n_features, 1);
                        estimate(logical(support)) = coefs;
                        self.estimates_(...
@@ -165,7 +165,6 @@ classdef AbstractUoILinearModel
                    self.scores_(bootstrap, idx) = self.score_predictions(...
                        self.estimation_score, y_test, y_pred, support);
                 end
-            
                 [~, self.rp_max_idx] = max(self.scores_, [], 2);
                 % extract the estimates over bootstraps from model with
                 % best regularization parameter value
@@ -176,8 +175,7 @@ classdef AbstractUoILinearModel
                 end
                 
                 self.coef_ = reshape(median(best_estimates, 1), n_tile,...
-                    n_features);
-                
+                    n_features);                
             end
             
         end
