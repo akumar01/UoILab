@@ -8,13 +8,18 @@ classdef UoI_Lasso < AbstractUoILinearRegressor
     methods
         function self = UoI_Lasso(varargin)
             self = self@AbstractUoILinearRegressor;
-
+            keyboard
             p = inputParser;
             addParameter(p, 'n_lambdas', 48)
             addParameter(p, 'tol', 0.001)
             addParameter(p, 'warm_start', true)
+            addParameter(p, 'fit_intercept', true)
+            addParameter(p, 'normalize', true)
+            addParameter(p, 'max_iter', 1000)
+            addParameter(p, 'est_score', 'r2',...
+                @(x) any(strcmp({'r2', 'AIC', 'AICc', 'BIC'}, x)))
             parse(p, varargin{:})
-               
+            
             % Copy input arguments to object
             for fn = fieldnames(p.Results)'
                 self.(fn{1}) = p.Results.(fn{1});

@@ -1,6 +1,11 @@
 function run_tests_lasso
 
-test_variable_selection()
+% test_variable_selection()
+test_estimation_score_usage()
+test_random_state()
+test_uoi_lasso_toy()
+test_reg_params()
+test_intercept()
 
 end
 

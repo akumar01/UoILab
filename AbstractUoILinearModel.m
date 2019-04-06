@@ -9,7 +9,7 @@ classdef AbstractUoILinearModel
         random_state
         selection_thresholds_
         n_supports
-        estimation_score
+        est_score
         coef_
         reg_params_
         n_reg_params_
@@ -163,7 +163,7 @@ classdef AbstractUoILinearModel
                    end
                    
                    self.scores_(bootstrap, idx) = self.score_predictions(...
-                       self.estimation_score, y_test, y_pred, support);
+                       self.est_score, y_test, y_pred, support);
                 end
                 [~, self.rp_max_idx] = max(self.scores_, [], 2);
                 % extract the estimates over bootstraps from model with

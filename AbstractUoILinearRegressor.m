@@ -17,20 +17,7 @@ classdef AbstractUoILinearRegressor < AbstractUoILinearModel
                 varargin = {};
             end
             self = self@AbstractUoILinearModel(varargin);
-
-            p = inputParser;
-            addParameter(p, 'fit_intercept', true)
-            addParameter(p, 'normalize', true)
-            addParameter(p, 'max_iter', 1000)
-            addParameter(p, 'estimation_score', 'r2',...
-                @(x) any(strcmp({'r2', 'AIC', 'AICc', 'BIC'}, x)))
-            parse(p, varargin{:})
-            
-            % Copy input arguments to object
-            for fn = fieldnames(p.Results)'
-                self.(fn{1}) = p.Results.(fn{1});
-            end
-            
+                        
         end
 
         function [n_samples, n_coef] = get_n_coef(self, X, y)
@@ -44,12 +31,14 @@ classdef AbstractUoILinearRegressor < AbstractUoILinearModel
                 score = ESF.r2score(y_true, y_pred);
             else
                 n_features = nnz(supports);
+                n_samples = numel(y_true);
+                ll = log_likelihood_glm('normal', y_ytrue, y_pred);
                 if strcmp(metric, 'BIC')
-                    score = ESF.BIC(y_true, y_pred, n_features);
+                    score = ESF.BIC(ll, n_features, n_samples);
                 elseif strcmp(metric, 'AIC')
-                    score = ESF.AIC(y_true, y_pred, n_features);
+                    score = ESF.AIC(ll, n_features);
                 elseif strcmp(metric, 'AICc')
-                    score = ESF.AICc(y_true, y_pred, n_features);
+                    score = ESF.AICc(ll, n_features, n_samples);
                 else
                     error('%s is not a valid option', metric)
                 end
