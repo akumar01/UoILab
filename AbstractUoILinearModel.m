@@ -23,26 +23,15 @@ classdef AbstractUoILinearModel
     methods
         % Constructor
         function self = AbstractUoILinearModel(varargin)
-            % Stupid workaround to deal with consecutive passes 
-            % of varargin
-            if nargin == 1 && isempty(varargin{1})
-                varargin = {};
-            end
-
-            p = inputParser;
-            addParameter(p, 'selection_frac', 0.9)
-            addParameter(p, 'estimation_frac', 0.9)
-            addParameter(p, 'n_boots_sel', 48)
-            addParameter(p, 'n_boots_est', 48)
-            addParameter(p, 'stability_selection', 1)
-            addParameter(p, 'random_state', NaN)
-            parse(p, varargin{:})
             
-            % Copy input arguments to object
-            for fn = fieldnames(p.Results)'
-                self.(fn{1}) = p.Results.(fn{1});
-            end
+            args_struct = cell2struct({varargin{2:2:length(varargin)}},...
+                                       {varargin{1:2:length(varargin)}}, 2);
 
+            keyboard
+            % Copy input arguments to object
+            for i = 1:length(varargin{1})
+            
+            end
             if isinteger(self.random_state)
                self.random_state = RandStream('mt19937ar', 'Seed',...
                                                 self.random_state);

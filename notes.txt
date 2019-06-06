@@ -43,3 +43,9 @@ permit use of stratify flag
 - dividerand supports number of targets - probably sufficient for stratification
 03/30/2019
 - Continue transferring tests to matlab
+
+04/14/2019
+- Stepping through run_tests_lasso
+- Since all inputParser arguments must be processed in UoI Lasso, need to pack
+- them up into a varagin-like cell to pass onto the base classes (in progress of
+- implementing)

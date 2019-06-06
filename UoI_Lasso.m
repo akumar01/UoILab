@@ -7,9 +7,17 @@ classdef UoI_Lasso < AbstractUoILinearRegressor
    
     methods
         function self = UoI_Lasso(varargin)
-            self = self@AbstractUoILinearRegressor;
-            keyboard
             p = inputParser;
+            
+            % Abstract Linear Model Parameters
+            addParameter(p, 'selection_frac', 0.9)
+            addParameter(p, 'estimation_frac', 0.9)
+            addParameter(p, 'n_boots_sel', 48)
+            addParameter(p, 'n_boots_est', 48)
+            addParameter(p, 'stability_selection', 1)
+            addParameter(p, 'random_state', NaN)
+            
+            % UoI Lasso parameters
             addParameter(p, 'n_lambdas', 48)
             addParameter(p, 'tol', 0.001)
             addParameter(p, 'warm_start', true)
@@ -19,6 +27,17 @@ classdef UoI_Lasso < AbstractUoILinearRegressor
             addParameter(p, 'est_score', 'r2',...
                 @(x) any(strcmp({'r2', 'AIC', 'AICc', 'BIC'}, x)))
             parse(p, varargin{:})
+            % Unpack p.Results into a cell array
+            c1 = fieldnames(p.Results);
+            c2 = struct2cell(p.Results);
+            % Interleave
+            vargs = cell(length(c1) + length(c2), 1);
+            for i = 1:length(c1)
+               vargs{2*i - 1} = c1{i};
+               vargs{2 * i} = c2{i};
+            end
+            
+            self = self@AbstractUoILinearRegressor(vargs{:});
             
             % Copy input arguments to object
             for fn = fieldnames(p.Results)'

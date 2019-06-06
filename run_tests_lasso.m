@@ -1,7 +1,7 @@
 function run_tests_lasso
 
 % test_variable_selection()
-test_estimation_score_usage()
+% test_estimation_score_usage()
 test_random_state()
 test_uoi_lasso_toy()
 test_reg_params()
@@ -23,27 +23,27 @@ end
 
 function test_estimation_score_usage
 
-methods = ['r2', 'AIC', 'AICc', 'BIC'];
+methods = {'r2', 'AIC', 'AICc', 'BIC'};
 
 % Change to use random state to generate data
 [X, y, ~] = gen_data('n_features', 10, 'n_informative', 3);
 
 scores = [];
 for i = 1:length(methods)
-    lasso = UoI_Lasso('est_score', methods(i));
-    assert(strcmp(lasso.est_score, methods(i)))
+    lasso = UoI_Lasso('est_score', methods{i});
+    assert(strcmp(lasso.est_score, methods{i}))
     lasso = lasso.fit(X, y);
-    score = np.max(lasso.scores_);
-    scores.append(score)
+    score = max(max(lasso.scores_));
+    scores(i) = score;
 end    
 
-assert(length(unique(scores)), len(methods))
+assert(length(unique(scores)) == length(methods))
 
 end
 
 function test_random_state
 
-[X, y, ~] = make_regression('n_features', 5, 'n_informative', 3,...
+[X, y, ~] = gen_data('n_features', 5, 'n_informative', 3,...
                             'random_state', 16, 'noise', 0.5);
 
 % Same state

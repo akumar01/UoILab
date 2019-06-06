@@ -1,5 +1,5 @@
 % Change name of this class
-classdef ESF
+classdef Scores
     methods(Static)
         function ll = log_likelihood_glm(model, y_true, y_pred)
             if strcmp(model, 'normal')
@@ -21,22 +21,22 @@ classdef ESF
        
         function s = BIC(ll, n_features, n_samples)
             
-            n_features * log(n_samples) - 2 * ll;
+            s = n_features * log(n_samples) - 2 * ll;
         
         end
-
-       
-        function s = AIC(ll, n_features)
-            s = 2 * n_features - 2 * ll;
-        end
-
+        
         function s = AICc(ll, n_features, n_samples)
-            s = AIC(ll, n_features);
+            s = 2 * n_features - 2  *ll;
             if n_samples > (n_features + 1)
                s = s + 2 * (n_features^2 + n_features)/...
                    (n_samples - n_features - 1);
             end
         end
+
+        function s = AIC(ll, n_features)
+            s = 2 * n_features - 2 * ll;
+        end
+
         
    end
 end
