@@ -49,3 +49,6 @@ permit use of stratify flag
 - Since all inputParser arguments must be processed in UoI Lasso, need to pack
 - them up into a varagin-like cell to pass onto the base classes (in progress of
 - implementing)
+
+06/07/2019
+- There is no stratify functionality in train_test_split 

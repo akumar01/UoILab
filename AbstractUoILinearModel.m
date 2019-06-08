@@ -24,19 +24,26 @@ classdef AbstractUoILinearModel
         % Constructor
         function self = AbstractUoILinearModel(varargin)
             
+            % Package arguments
             args_struct = cell2struct({varargin{2:2:length(varargin)}},...
                                        {varargin{1:2:length(varargin)}}, 2);
 
-            keyboard
-            % Copy input arguments to object
-            for i = 1:length(varargin{1})
             
+            % Copy input arguments to object
+            arg_fields = fields(args_struct);
+            for i = 1:length(arg_fields)
+               self.(arg_fields{i}) = args_struct.(arg_fields{i});
             end
-            if isinteger(self.random_state)
-               self.random_state = RandStream('mt19937ar', 'Seed',...
-                                                self.random_state);
-               RandStream.setGlobalStream(sef.random_state)
+                        
+            if isnan(self.random_state)
+                rng('shuffle')
+            else
+                global_stream = RandStream('mt19937ar', 'Seed',...
+                                            self.random_state);
+                RandStream.setGlobalStream(global_stream)
             end
+            
+            self.random_state = RandStream.getGlobalStream;
             
             self.selection_thresholds_ = ...
             stability_selection_to_threshold(self.stability_selection,...
@@ -93,7 +100,7 @@ classdef AbstractUoILinearModel
                 % draw a resamples bootstrap (need to re-implement to
                 % support stratification!) 
                 [trainInd, ~] = train_test_split(n_samples, ...
-                    self.selection_frac);
+                    self.selection_frac, self.random_state);
                 X_rep = X(trainInd, :);
                 y_rep = y(trainInd);
                 
@@ -123,7 +130,7 @@ classdef AbstractUoILinearModel
             for bootstrap = 1:self.n_boots_est
                 % Draw a resampled bootstrap
                 [trainInd, testInd] = train_test_split(n_samples, ...
-                self.estimation_frac);
+                self.estimation_frac, self.random_state);
                 X_train = X(trainInd, :);
                 y_train = y(trainInd);
                 X_test = X(testInd, :);

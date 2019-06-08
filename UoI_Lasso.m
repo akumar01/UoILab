@@ -8,7 +8,7 @@ classdef UoI_Lasso < AbstractUoILinearRegressor
     methods
         function self = UoI_Lasso(varargin)
             p = inputParser;
-            
+                        
             % Abstract Linear Model Parameters
             addParameter(p, 'selection_frac', 0.9)
             addParameter(p, 'estimation_frac', 0.9)
@@ -36,13 +36,9 @@ classdef UoI_Lasso < AbstractUoILinearRegressor
                vargs{2*i - 1} = c1{i};
                vargs{2 * i} = c2{i};
             end
-            
+           
             self = self@AbstractUoILinearRegressor(vargs{:});
-            
-            % Copy input arguments to object
-            for fn = fieldnames(p.Results)'
-                self.(fn{1}) = p.Results.(fn{1});
-            end            
+
         end
         
         % Handle call to matlab Lasso function

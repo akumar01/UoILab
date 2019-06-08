@@ -57,6 +57,8 @@ assert_approx_equal(l1log_0.coef_, l1log_1.coef_)
 % Different state
 l1log_1 = UoI_Lasso('random_state', 14);
 l1log_1 = l1log_1.fit(X, y);
+
+keyboard
 assert(~assert_approx_equal(l1log_0.coef_, l1log_1.coef_))
 
 % Different state, not set
