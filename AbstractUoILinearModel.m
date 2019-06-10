@@ -103,17 +103,16 @@ classdef AbstractUoILinearModel
                     self.selection_frac, self.random_state);
                 X_rep = X(trainInd, :);
                 y_rep = y(trainInd);
-                
                 for idx = 1:length(self.reg_params_)
                     selection_coefs(bootstrap, idx, :) = ...
-                    self.selection_lm(X_rep, y_rep, self.reg_params_(idx));
+                    self.selection_lm(X_rep, y_rep, self.reg_params_(idx),...
+                                      self.normalize);
                 end
             end
             
             self.supports_ = self.intersect(selection_coefs,...
                                             self.selection_thresholds_);
             self.n_supports_ = size(self.supports_, 1);
-            
             % Estimation Module
 
             % coefs_ for each bootstrap for each support

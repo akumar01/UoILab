@@ -15,7 +15,6 @@ for i = 1:numel(selection_thresholds)
    supports(i, :, :) = sum(coefs ~= 0, 1) >= selection_thresholds(i); 
 end
 
-
 supports = squeeze(reshape(supports, n_selection_thresholds * ...
                     n_reg_params, n_features));
 

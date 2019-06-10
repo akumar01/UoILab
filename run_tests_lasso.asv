@@ -80,7 +80,7 @@ y = X * beta';
 % Choose the selection frac to be slightly smaller to ensure
 % that we get good test sets
 
-lasso = UoI_Lasso('fit_intercept', false, 'selection_frac', 0.75,...
+lasso = UoI_Lasso('fit_intercept', fa'selection_frac', 0.75,...
                     'estimation_frac', 0.75);
 lasso = lasso.fit(X, y);
 

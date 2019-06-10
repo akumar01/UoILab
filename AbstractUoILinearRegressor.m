@@ -52,6 +52,7 @@ classdef AbstractUoILinearRegressor < AbstractUoILinearModel
             [X, y, X_offset, y_offset, X_scale] = ...
                 preprocess_data(X, y, self.fit_intercept, self.normalize);
             self = fit@AbstractUoILinearModel(self, X, y, varargin);
+            keyboard
             self = self.set_intercept(X_offset, y_offset, X_scale);
             self.coef_ = squeeze(self.coef_);
         end

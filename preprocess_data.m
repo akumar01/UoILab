@@ -23,20 +23,20 @@ function [X, y, X_offset, y_offset, X_scale] =  preprocess_data(X, y, fit_interc
         X_offset = mean(X, 1);
         X = X - X_offset;
         if normalize
-            X_scale = sqrt(sum(X.^2, 1));
+            X_scale = np.std(X, 0, 1);
             X = bsxfun(@rdivide, X, X_scale);
         else
-            X_scale = ones(size(X, 2));
+            X_scale = ones(size(X, 2), 1);
         end
         y_offset = mean(y);
         y = y - y_offset;
     else
-        X_offset = zeros(size(X, 2));
-        X_scale = ones(size(X, 2));
+        X_offset = zeros(size(X, 2), 1);
+        X_scale = ones(size(X, 2), 1);
         if ndims(y) == 1
             y_offset = 0;
         else
-            y_offset = zeros(size(y, 2));
+            y_offset = zeros(size(y, 2), 1);
         end
     end
 end
